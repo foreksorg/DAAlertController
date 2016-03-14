@@ -7,6 +7,7 @@
 //
 
 #import "DAAlertController.h"
+#import "AlertObject.h"
 #import <objc/runtime.h>
 
 
@@ -19,6 +20,7 @@
 
 
 @implementation DAAlertController
+@synthesize alertList, showing;
 
 + (instancetype)defaultAlertController {
     
@@ -27,12 +29,52 @@
     
     dispatch_once(&predicate, ^{
         alertController = [[self alloc] init];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertShowed) name:@"ForeksDAAlertViewShowed" object:nil];
     });
     
     return alertController;
 }
 
+-(id)init{
+    if(self = [super init]){
+        self.alertList= [[NSMutableArray alloc]init];
+        self.showing = NO;
+    }
+    return self;
+}
+
+-(void)showAlert{
+    if(self.alertList.count >0 && !self.showing){
+        AlertObject* alert = [self.alertList objectAtIndex:0];
+        switch (alert.alertStyle) {
+            case DAAlertControllerStyleAlert: {
+                [self showAlertViewInViewController:alert.alertViewController withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions];
+            } break;
+            case DAAlertControllerStyleActionSheet: {
+                [self showActionSheetInViewController:alert.alertViewController fromSourceView:alert.alertViewController.view withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions permittedArrowDirections:0];
+            } break;
+        }
+        [self defaultAlertController].showing = YES;
+    }
+}
+
+-(void)alertShowed{
+    if(self.alertList.count >0){
+        [self.alertList removeObjectAtIndex:0];
+        self.showing = NO;
+        if(self.alertList.count >0){
+            [self showAlert];
+        }
+    }
+}
+
 + (void)showAlertOfStyle:(DAAlertControllerStyle)style inViewController:(UIViewController *)viewController withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions {
+    
+    
+    AlertObject* alert = [[AlertObject alloc] initWithTitle:title andMessage:message andViewController:viewController andActions:actions andStyle:style];
+    [self.alertList addObject:alert];
+    [self showAlert];
+    
     
     switch (style) {
         case DAAlertControllerStyleAlert: {
@@ -120,6 +162,7 @@
                 }
                 if (action.handler) {
                     action.handler();
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"ForeksDAAlertViewShowed" object:nil];
                 }
             }];
             if (validationBlock) {

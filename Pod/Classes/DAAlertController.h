@@ -18,6 +18,9 @@ typedef NS_ENUM(NSInteger, DAAlertControllerStyle) {
 
 @interface DAAlertController : NSObject
 
+@property (nonatomic, retain)NSMutableArray* alertList;
+@property (nonatomic) BOOL showing;
+
 + (void)showAlertOfStyle:(DAAlertControllerStyle)style inViewController:(UIViewController *)viewController withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions;
 
 /// Action Sheets
