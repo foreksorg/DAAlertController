@@ -7,7 +7,6 @@
 //
 
 #import "DAAlertController.h"
-#import "AlertObject.h"
 #import <objc/runtime.h>
 
 
@@ -45,16 +44,16 @@
 
 -(void)showAlert{
     if(self.alertList.count >0 && !self.showing){
-        AlertObject* alert = [self.alertList objectAtIndex:0];
+        ForeksDAAlertObject* alert = [self.alertList objectAtIndex:0];
         switch (alert.alertStyle) {
             case DAAlertControllerStyleAlert: {
-                [self showAlertViewInViewController:alert.alertViewController withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions];
+                [DAAlertController showAlertViewInViewController:alert.alertViewController withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions];
             } break;
             case DAAlertControllerStyleActionSheet: {
-                [self showActionSheetInViewController:alert.alertViewController fromSourceView:alert.alertViewController.view withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions permittedArrowDirections:0];
+                [DAAlertController showActionSheetInViewController:alert.alertViewController fromSourceView:alert.alertViewController.view withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions permittedArrowDirections:0];
             } break;
         }
-        [self defaultAlertController].showing = YES;
+        self.showing = YES;
     }
 }
 
@@ -70,20 +69,9 @@
 
 + (void)showAlertOfStyle:(DAAlertControllerStyle)style inViewController:(UIViewController *)viewController withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions {
     
-    
-    AlertObject* alert = [[AlertObject alloc] initWithTitle:title andMessage:message andViewController:viewController andActions:actions andStyle:style];
-    [self.alertList addObject:alert];
-    [self showAlert];
-    
-    
-    switch (style) {
-        case DAAlertControllerStyleAlert: {
-            [self showAlertViewInViewController:viewController withTitle:title message:message actions:actions];
-        } break;
-        case DAAlertControllerStyleActionSheet: {
-            [self showActionSheetInViewController:viewController fromSourceView:viewController.view withTitle:title message:message actions:actions permittedArrowDirections:0];
-        } break;
-    }
+    ForeksDAAlertObject* alert = [[ForeksDAAlertObject alloc] initWithTitle:title andMessage:message andViewController:viewController andActions:actions andStyle:style];
+    [[DAAlertController defaultAlertController].alertList addObject:alert];
+    [[DAAlertController defaultAlertController]showAlert];
 }
 
 + (void)showActionSheetInViewController:(UIViewController *)viewController fromSourceView:(UIView *)sourceView withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions permittedArrowDirections:(UIPopoverArrowDirection)permittedArrowDirections {
@@ -143,7 +131,9 @@
 
 + (void)showAlertViewInViewController:(UIViewController *)viewController withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions {
     
-    [self showAlertViewInViewController:viewController withTitle:title message:message actions:actions numberOfTextFields:0 textFieldsConfigurationHandler:nil validationBlock:nil];
+    ForeksDAAlertObject* alert = [[ForeksDAAlertObject alloc] initWithTitle:title andMessage:message andViewController:viewController andActions:actions andStyle:DAAlertControllerStyleAlert];
+    [[DAAlertController defaultAlertController].alertList addObject:alert];
+    [[DAAlertController defaultAlertController]showAlert];
 }
 
 + (void)showAlertViewInViewController:(UIViewController *)viewController withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions numberOfTextFields:(NSUInteger)numberOfTextFields textFieldsConfigurationHandler:(void (^)(NSArray *textFields))configurationHandler validationBlock:(BOOL (^)(NSArray *textFields))validationBlock {

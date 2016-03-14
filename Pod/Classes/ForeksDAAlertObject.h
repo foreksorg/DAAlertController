@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "DAAlertController.h"
 
-@interface AlertObject : NSObject
+@interface ForeksDAAlertObject : NSObject
 
 @property(nonatomic,retain) NSString* alertTitle;
 @property(nonatomic,retain) NSString* alertMessage;

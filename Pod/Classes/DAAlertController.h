@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DAAlertAction.h"
+#import "ForeksDAAlertObject.h"
 
 
 typedef NS_ENUM(NSInteger, DAAlertControllerStyle) {
@@ -20,6 +21,8 @@ typedef NS_ENUM(NSInteger, DAAlertControllerStyle) {
 
 @property (nonatomic, retain)NSMutableArray* alertList;
 @property (nonatomic) BOOL showing;
+
+-(void)showAlert;
 
 + (void)showAlertOfStyle:(DAAlertControllerStyle)style inViewController:(UIViewController *)viewController withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions;
 

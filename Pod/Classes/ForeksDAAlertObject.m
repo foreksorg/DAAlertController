@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AlertObject.h"
+#import "ForeksDAAlertObject.h"
 
-@implementation AlertObject
+@implementation ForeksDAAlertObject
 
 -(id)initWithTitle:(NSString*)title andMessage:(NSString*)message andViewController:(UIViewController*)viewController andActions:(NSArray*)actions andStyle:(DAAlertControllerStyle)style{
     if(self = [super init]){
