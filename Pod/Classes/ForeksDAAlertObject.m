@@ -11,11 +11,11 @@
 
 @implementation ForeksDAAlertObject
 
--(id)initWithTitle:(NSString*)title andMessage:(NSString*)message andViewController:(UIViewController*)viewController andActions:(NSArray*)actions andStyle:(DAAlertControllerStyle)style{
+-(id)initWithTitle:(NSString*)title andMessage:(NSString*)message andViewController:(UIViewController*)viewController andActions:(NSArray*)actions andStyle:(int)style{
     if(self = [super init]){
         _alertTitle = title;
         _alertMessage = message;
-        _alertActions = [[NSArray alloc]initWithArray:actions];
+        _alertActions = actions;
         _alertViewController = viewController;
         _alertStyle = style;
     }

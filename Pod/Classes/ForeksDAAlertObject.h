@@ -11,12 +11,12 @@
 
 @interface ForeksDAAlertObject : NSObject
 
-@property(nonatomic,retain) NSString* alertTitle;
-@property(nonatomic,retain) NSString* alertMessage;
-@property(nonatomic,retain) NSArray* alertActions;
-@property(nonatomic,retain) UIViewController* alertViewController;
-@property(nonatomic) DAAlertControllerStyle alertStyle;
+@property(nonatomic,strong) NSString* alertTitle;
+@property(nonatomic,strong) NSString* alertMessage;
+@property(nonatomic,strong) NSArray* alertActions;
+@property(nonatomic,strong) UIViewController* alertViewController;
+@property(nonatomic) int alertStyle;
 
--(id)initWithTitle:(NSString*)title andMessage:(NSString*)message andViewController:(UIViewController*)viewController andActions:(NSArray*)actions andStyle:(DAAlertControllerStyle)style;
+-(id)initWithTitle:(NSString*)title andMessage:(NSString*)message andViewController:(UIViewController*)viewController andActions:(NSArray*)actions andStyle:(int)style;
 
 @end

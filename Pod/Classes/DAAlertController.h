@@ -21,8 +21,12 @@ typedef NS_ENUM(NSInteger, DAAlertControllerStyle) {
 
 @property (nonatomic, retain)NSMutableArray* alertList;
 @property (nonatomic) BOOL showing;
+@property (nonatomic) BOOL saveAndDismiss;
 
 -(void)showAlert;
+
++(void)saveAlertsAndDismissAll;
++(void)showWaitingAlerts;
 
 + (void)showAlertOfStyle:(DAAlertControllerStyle)style inViewController:(UIViewController *)viewController withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions;
 

@@ -15,11 +15,13 @@
 
 @interface DAAlertController () <UIActionSheetDelegate, UIAlertViewDelegate>
 
+-(void)alertShowed;
+
 @end
 
 
 @implementation DAAlertController
-@synthesize alertList, showing;
+@synthesize alertList, showing, saveAndDismiss;
 
 + (instancetype)defaultAlertController {
     
@@ -28,7 +30,6 @@
     
     dispatch_once(&predicate, ^{
         alertController = [[self alloc] init];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertShowed) name:@"ForeksDAAlertViewShowed" object:nil];
     });
     
     return alertController;
@@ -42,12 +43,14 @@
     return self;
 }
 
+
+
 -(void)showAlert{
-    if(self.alertList.count >0 && !self.showing){
+    if(self.alertList.count >0 && !self.showing && !self.saveAndDismiss){
         ForeksDAAlertObject* alert = [self.alertList objectAtIndex:0];
         switch (alert.alertStyle) {
             case DAAlertControllerStyleAlert: {
-                [DAAlertController showAlertViewInViewController:alert.alertViewController withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions];
+                [DAAlertController showAlertViewInViewController:alert.alertViewController withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions numberOfTextFields:0 textFieldsConfigurationHandler:nil validationBlock:nil];
             } break;
             case DAAlertControllerStyleActionSheet: {
                 [DAAlertController showActionSheetInViewController:alert.alertViewController fromSourceView:alert.alertViewController.view withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions permittedArrowDirections:0];
@@ -67,9 +70,19 @@
     }
 }
 
++(void)saveAlertsAndDismissAll{
+    [DAAlertController defaultAlertController].saveAndDismiss = YES;
+    [DAAlertController defaultAlertController].showing = NO;
+}
+
++(void)showWaitingAlerts{
+    [DAAlertController defaultAlertController].saveAndDismiss = NO;
+    [[DAAlertController defaultAlertController] showAlert];
+}
+
 + (void)showAlertOfStyle:(DAAlertControllerStyle)style inViewController:(UIViewController *)viewController withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions {
-    
-    ForeksDAAlertObject* alert = [[ForeksDAAlertObject alloc] initWithTitle:title andMessage:message andViewController:viewController andActions:actions andStyle:style];
+    NSMutableArray* arr = [[NSMutableArray alloc]initWithArray:actions];
+    ForeksDAAlertObject* alert = [[ForeksDAAlertObject alloc] initWithTitle:title andMessage:message andViewController:viewController andActions:arr andStyle:style];
     [[DAAlertController defaultAlertController].alertList addObject:alert];
     [[DAAlertController defaultAlertController]showAlert];
 }
@@ -152,7 +165,7 @@
                 }
                 if (action.handler) {
                     action.handler();
-                    [[NSNotificationCenter defaultCenter]postNotificationName:@"ForeksDAAlertViewShowed" object:nil];
+                    [[DAAlertController defaultAlertController] alertShowed];
                 }
             }];
             if (validationBlock) {
@@ -342,6 +355,7 @@
     
     if (action.handler) {
         action.handler();
+        [[DAAlertController defaultAlertController] alertShowed];
     }
 }
 
