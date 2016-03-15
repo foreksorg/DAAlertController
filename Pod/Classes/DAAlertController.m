@@ -12,10 +12,15 @@
 
 #define itemAt(array, index) ((array.count > index) ? array[index] : nil)
 
+void(^dismissBlock)(void) = ^{
+    ;
+};
+
 
 @interface DAAlertController () <UIActionSheetDelegate, UIAlertViewDelegate>
 
 -(void)alertShowed;
+-(void)showAlert;
 
 @end
 
@@ -92,6 +97,9 @@
     if (NSStringFromClass([UIAlertController class])) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleActionSheet];
         for (DAAlertAction *action in actions) {
+            if(action.handler == nil){
+                action.handler = dismissBlock;
+            }
             [alertController addAction:[UIAlertAction actionWithTitle:action.title style:(UIAlertActionStyle)action.style handler:^(UIAlertAction *anAction) {
                 [self handleActionSelection:action];
             }]];
@@ -156,6 +164,9 @@
         NSMutableSet *disableableActions = [NSMutableSet set];
         __block NSMutableSet *observers = [NSMutableSet set];
         for (DAAlertAction *action in actions) {
+            if(action.handler == nil){
+                action.handler = dismissBlock;
+            }
             UIAlertAction *actualAction = [UIAlertAction actionWithTitle:action.title style:(UIAlertActionStyle)action.style handler:^(UIAlertAction *anAction) {
                 if (observers.count) {
                     for (id observer in observers) {
