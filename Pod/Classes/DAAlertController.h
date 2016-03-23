@@ -23,6 +23,12 @@ typedef NS_ENUM(NSInteger, DAAlertControllerStyle) {
 @property (nonatomic) BOOL showing;
 @property (nonatomic) BOOL saveAndDismiss;
 
+
+/**
+ *  Default Alet Controller
+ */
++ (instancetype)defaultAlertController;
+
 /**
  *  Save Existing alert, don't show coming alerts but save in stack
  */
