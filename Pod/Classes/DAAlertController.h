@@ -41,6 +41,9 @@ typedef NS_ENUM(NSInteger, DAAlertControllerStyle) {
 +(void)showWaitingAlerts;
 
 
++(void)dismissAllAlerts;
+
+
 
 + (void)showAlertOfStyle:(DAAlertControllerStyle)style inViewController:(UIViewController *)viewController withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions;
 + (void)showAlertViewInViewController:(UIViewController *)viewController withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions;

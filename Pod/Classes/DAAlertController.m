@@ -24,6 +24,8 @@ void(^dismissBlock)(void) = ^{
 
 @end
 
+static UIAlertController *alertController;
+
 
 @implementation DAAlertController
 @synthesize alertList, showing, saveAndDismiss;
@@ -75,6 +77,13 @@ void(^dismissBlock)(void) = ^{
     }
 }
 
++(void)dismissAllAlerts{
+    [[DAAlertController defaultAlertController].alertList removeAllObjects];
+    [DAAlertController defaultAlertController].showing = NO;
+    [alertController dismissViewControllerAnimated:NO completion:nil];
+}
+
+
 +(void)saveAlertsAndDismissAll{
     [DAAlertController defaultAlertController].saveAndDismiss = YES;
     [DAAlertController defaultAlertController].showing = NO;
@@ -95,7 +104,7 @@ void(^dismissBlock)(void) = ^{
 + (void)showActionSheetInViewController:(UIViewController *)viewController fromSourceView:(UIView *)sourceView withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions permittedArrowDirections:(UIPopoverArrowDirection)permittedArrowDirections {
     
     if (NSStringFromClass([UIAlertController class])) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleActionSheet];
+        alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleActionSheet];
         for (DAAlertAction *action in actions) {
             if(action.handler == nil){
                 action.handler = dismissBlock;
@@ -131,7 +140,7 @@ void(^dismissBlock)(void) = ^{
 + (void)showActionSheetInViewController:(UIViewController *)viewController fromBarButtonItem:(UIBarButtonItem *)barButtonItem withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions permittedArrowDirections:(UIPopoverArrowDirection)permittedArrowDirections {
     
     if (NSStringFromClass([UIAlertController class])) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleActionSheet];
+        alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleActionSheet];
         for (DAAlertAction *action in actions) {
             [alertController addAction:[UIAlertAction actionWithTitle:action.title style:(UIAlertActionStyle)action.style handler:^(UIAlertAction *anAction) {
                 [self handleActionSelection:action];
@@ -160,7 +169,7 @@ void(^dismissBlock)(void) = ^{
 + (void)showAlertViewInViewController:(UIViewController *)viewController withTitle:(NSString *)title message:(NSString *)message actions:(NSArray *)actions numberOfTextFields:(NSUInteger)numberOfTextFields textFieldsConfigurationHandler:(void (^)(NSArray *textFields))configurationHandler validationBlock:(BOOL (^)(NSArray *textFields))validationBlock {
     
     if (NSStringFromClass([UIAlertController class])) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
         NSMutableSet *disableableActions = [NSMutableSet set];
         __block NSMutableSet *observers = [NSMutableSet set];
         for (DAAlertAction *action in actions) {
