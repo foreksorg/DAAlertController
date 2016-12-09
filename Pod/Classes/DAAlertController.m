@@ -54,6 +54,7 @@ static UIAlertController *alertController;
 
 -(void)showAlert{
     if(self.alertList.count >0 && !self.showing && !self.saveAndDismiss){
+        self.showing = YES;
         ForeksDAAlertObject* alert = [self.alertList objectAtIndex:0];
         switch (alert.alertStyle) {
             case DAAlertControllerStyleAlert: {
@@ -63,7 +64,6 @@ static UIAlertController *alertController;
                 [DAAlertController showActionSheetInViewController:alert.alertViewController fromSourceView:alert.alertViewController.view withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions permittedArrowDirections:0];
             } break;
         }
-        self.showing = YES;
     }
 }
 
