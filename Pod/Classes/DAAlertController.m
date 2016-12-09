@@ -52,18 +52,25 @@ static UIAlertController *alertController;
 
 
 
--(void)showAlert{
-    if(self.alertList.count >0 && !self.showing && !self.saveAndDismiss){
-        self.showing = YES;
-        ForeksDAAlertObject* alert = [self.alertList objectAtIndex:0];
-        switch (alert.alertStyle) {
-            case DAAlertControllerStyleAlert: {
-                [DAAlertController showAlertViewInViewController:alert.alertViewController withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions numberOfTextFields:0 textFieldsConfigurationHandler:nil validationBlock:nil];
-            } break;
-            case DAAlertControllerStyleActionSheet: {
-                [DAAlertController showActionSheetInViewController:alert.alertViewController fromSourceView:alert.alertViewController.view withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions permittedArrowDirections:0];
-            } break;
+- (void)showAlert{
+    if(self.alertList.count > 0 && !self.showing && !self.saveAndDismiss) {
+        ForeksDAAlertObject *alert = [self.alertList objectAtIndex:0];
+        if (alert.alertViewController && alert.alertViewController.isViewLoaded && alert.alertViewController.view.window) {
+            self.showing = YES;
+            switch (alert.alertStyle) {
+                case DAAlertControllerStyleAlert: {
+                    [DAAlertController showAlertViewInViewController:alert.alertViewController withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions numberOfTextFields:0 textFieldsConfigurationHandler:nil validationBlock:nil];
+                    break;
+                }
+                case DAAlertControllerStyleActionSheet: {
+                    [DAAlertController showActionSheetInViewController:alert.alertViewController fromSourceView:alert.alertViewController.view withTitle:alert.alertTitle message:alert.alertMessage actions:alert.alertActions permittedArrowDirections:0];
+                    break;
+                }
+            }
+        } else {
+            [self.alertList removeObjectAtIndex:0];
         }
+
     }
 }
 
